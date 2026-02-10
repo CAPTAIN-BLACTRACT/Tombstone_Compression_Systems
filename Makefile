@@ -3,30 +3,30 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++17 -Iinclude
 
 # Directories
-SRC_DIR = src #files that would be loaded
-BUILD_DIR = build # intermediate build files
-TARGET = $(BUILD_DIR)/tombstone #output
+SRC_DIR = src
+BUILD_DIR = build
+TARGET = $(BUILD_DIR)/tombstone
 
-# Find all .cpp files in src/
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+# Explicitly list source files (Safer for now)
+SRCS = $(SRC_DIR)/main.cpp
 
-# Default rule: Build the executable
-all: $(TARGET)
+# Define Object files based on Source files
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
-# Link object files to create the executable
+# Main build target
 $(TARGET): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
-	@echo "Build complete: $@"
+	@echo "Build successful! Run with: ./$(TARGET)"
 
-# Compile .cpp files into .o files
+# Rule to compile .cpp to .o
+# NOTE: The indented lines below MUST use a TAB character, not spaces.
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up build files
+# Clean command
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean
+.PHONY: clean
