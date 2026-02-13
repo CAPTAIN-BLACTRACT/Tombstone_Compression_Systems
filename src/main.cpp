@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include "tcs_bmp.h"
+#include "tcs_compression.h"
 
 using namespace std;
 
@@ -66,24 +67,12 @@ int main(int argc, char* argv[]){
   file.close();
 
   cout<<"Image Loaded Successfully"<<endl;
-  
-  //these are now testing methods
-  ofstream outFile("test_copy.bmp",ios::binary);
-
-  outFile.write(reinterpret_cast<const char*>(&fileHeader),sizeof(fileHeader));
-  outFile.write(reinterpret_cast<const char*>(&infoHeader),sizeof(infoHeader));
-
-  //pixel aur padding dalen
-  for(int y=0;y<height;y++){
-    for(int x=0;x<width;x++){
-      outFile.write(reinterpret_cast<const char*>(&pixelData[y*width+x]),3);
-    }
-
-    char pad[3] = {0,0,0};
-    outFile.write(pad,padding);
-  }
-
-  outFile.close();
-  cout<<"Success ! Wrote 'test_copy.bmp'"<<endl;
+ //Compression
+  size_t pos = filename.find_last_of('.');
+  string outputFilename = 
+    (pos == string::npos) ? filename + ".tcs"
+                          : filename.substr(0,filename.find_last_of('.')) + ".tcs";
+  cout<<"Compressing to "<<outputFilename<<"...."<<endl;
+  compressRLE(pixelData, width, height, outputFilename);
   return 0;
 }
