@@ -9,9 +9,35 @@
 #include <iostream>
 #include "tcs_bmp.h"
 
+
 bool arePixelsSame(const Pixel& a, const Pixel& b){
 
   return (a.blue==b.blue&&a.green==b.green&&a.red==b.red);
+  
+}
+
+void decompressRLE(string tcsFilename, string outBmpName){
+  std::ifstream inputFile(tcsFilename, std::ios::binary);
+  if(!inputFile){
+  std::cerr<<"Cant open the file "<<tcsFilename<<std::endl;
+    return;
+  }
+  std::ofstream outFile(outBmpName,std::ios::binary);
+  
+  char magicBuffer[5]={0};
+  inputFile.read(&magicBuffer, 4);
+
+  if(std::string(magicBuffer)!="TCS1"){  
+    std::cerr<<"This is not a valid tcs file"<<std::endl;
+    return;
+  }
+  
+  int32_t width,height;
+
+  inputFile.read(reinterpret_cast<char*>(&width), sizeof(width) );
+  inputFile.read(reinterpret_cast<char*>(&height), sizeof(height));
+
+  std::cout<<"Restoring image: "<<width<<"x"<<height<<std::endl;
   
 }
 
