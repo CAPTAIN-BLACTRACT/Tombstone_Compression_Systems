@@ -11,6 +11,9 @@ The current version of Tombstone Compression Systems can:
 
 For details, please refer to `src/main.cpp`.
 
+## Refactoring TODOs
+- [ ] Move `compressRLE` and `decompressRLE` functions from `include/tcs_compression.h` to a separate source file (e.g., `src/tcs_compression.cpp`).
+
 ## Future Enhancements
 Planned compression modes include:
 2. Dictionary/Index Compression
